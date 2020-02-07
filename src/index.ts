@@ -4,7 +4,7 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as helmet from "helmet";
 import * as cors from "cors";
-import routes from "./routes";
+import routes from "./routes/index";
 
 //Connects to the Database -> then starts the express
 createConnection()

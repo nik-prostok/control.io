@@ -4,7 +4,7 @@ import { validate } from "class-validator";
 
 import { User } from "../entity/User";
 
-class UserController{
+export class UserController{
 
     static listAll = async (req: Request, res: Response) => {
         //Get users from database
@@ -19,7 +19,7 @@ class UserController{
 
     static getOneById = async (req: Request, res: Response) => {
         //Get the ID from the url
-        const id: number = req.params.id;
+        const id: string = req.params.id;
 
         //Get the user from database
         const userRepository = getRepository(User);
@@ -28,7 +28,7 @@ class UserController{
                 select: ["id", "username", "role"] //We dont want to send the password on response
             });
         } catch (error) {
-            res.status(404).send("User not found");
+            res.status(404).send({msg: "User not found"});
         }
     };
 
@@ -55,12 +55,12 @@ class UserController{
         try {
             await userRepository.save(user);
         } catch (e) {
-            res.status(409).send("username already in use");
+            res.status(409).send({msg: 'username already in use'});
             return;
         }
 
         //If all ok, send 201 response
-        res.status(201).send("User created");
+        res.status(201).send({msg: 'User created'});
     };
 
     static editUser = async (req: Request, res: Response) => {
@@ -77,7 +77,7 @@ class UserController{
             user = await userRepository.findOneOrFail(id);
         } catch (error) {
             //If not found, send a 404 response
-            res.status(404).send("User not found");
+            res.status(404).send({msg: "User not found"});
             return;
         }
 
@@ -94,7 +94,7 @@ class UserController{
         try {
             await userRepository.save(user);
         } catch (e) {
-            res.status(409).send("username already in use");
+            res.status(409).send({msg: "username already in use"});
             return;
         }
         //After all send a 204 (no content, but accepted) response
@@ -110,7 +110,7 @@ class UserController{
         try {
             user = await userRepository.findOneOrFail(id);
         } catch (error) {
-            res.status(404).send("User not found");
+            res.status(404).send({msg: "User not found"});
             return;
         }
         userRepository.delete(id);
